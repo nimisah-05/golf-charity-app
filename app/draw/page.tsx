@@ -1,38 +1,23 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { supabase } from "@/app/lib/supabase";
+import { useEffect, useState } from "react"
 
-export default function Draw() {
-  const [winner, setWinner] = useState<any>(null);
+export default function DrawPage() {
+  const [charityId, setCharityId] = useState<string | null>(null)
 
   useEffect(() => {
-    runDraw();
-  }, []);
+    const id = localStorage.getItem("selectedCharity")
+    setCharityId(id)
+  }, [])
 
-  const runDraw = async () => {
-    const { data } = await supabase
-      .from("charities")
-      .select("*")
-      .order("total_score", { ascending: false })
-      .limit(1);
-
-    setWinner(data?.[0]);
-  };
-
-  const myCharity = localStorage.getItem("selectedCharity");
+  if (!charityId) {
+    return <h1>No charity selected</h1>
+  }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl">Draw Result</h1>
-
-      {winner && (
-        <div>
-          Winner: {winner.name}
-          <br />
-          {winner.id === myCharity ? "🎉 YOU WIN" : "😢 YOU LOST"}
-        </div>
-      )}
+    <div>
+      <h1>Draw Game Page</h1>
+      <p>Charity: {charityId}</p>
     </div>
-  );
+  )
 }
